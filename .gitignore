@@ -1,0 +1,12 @@
+/packages
+/.vs
+/Cookbook.BussinessLayer/bin
+/Cookbook.BussinessLayer/obj
+/Cookbook.Data/bin
+/Cookbook.Data/obj
+/CookbookApi/bin
+/CookbookApi/obj
+/CookbookApi/CookbookApi.csproj.user
+/CookbookApi.Tests/bin
+/CookbookApi.Tests/obj
+/CookbookApi.Tests/CookbookApi.Tests.csproj.user
