@@ -111,6 +111,7 @@ namespace Cookbook.BussinessLayer.Core
                     var repository = unitOfWork.Repository<TEntity>();
 
                     action?.Invoke(repository);
+                    unitOfWork.SaveChanges();
 
                     if (UserTransaction)
                     {

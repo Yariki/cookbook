@@ -1,7 +1,8 @@
-﻿namespace Cookbook.BussinessLayer.Interfaces
+﻿using Cookbook.Data.Models;
+
+namespace Cookbook.BussinessLayer.Interfaces
 {
-    public interface IBSEntityHistoryBll
-    {
-        
+    public interface IBSEntityHistoryBll : IBSCoreBll<BSEntityHistory>
+    {   
     }
 }

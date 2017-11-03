@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
+using AutoMapper;
 
 namespace CookbookApi
 {
@@ -11,6 +12,7 @@ namespace CookbookApi
     {
         protected void Application_Start()
         {
+            Mapper.Initialize(m => m.AddProfile<MappingProfile>());
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

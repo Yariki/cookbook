@@ -58,12 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Blls\BSEntityHistoryBll.cs" />
+    <Compile Include="Blls\BSIngredientBll.cs" />
     <Compile Include="Blls\BSRecipeBll.cs" />
     <Compile Include="CookbookBussinessModule.cs" />
     <Compile Include="Core\BSBussinessEntityBll.cs" />
     <Compile Include="Core\BSCoreBll.cs" />
     <Compile Include="Interfaces\IBSCoreBll.cs" />
     <Compile Include="Interfaces\IBSEntityHistoryBll.cs" />
+    <Compile Include="Interfaces\IBSIngredientBll.cs" />
     <Compile Include="Interfaces\IBSRecipeBll.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

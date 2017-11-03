@@ -2,8 +2,7 @@
 
 namespace Cookbook.BussinessLayer.Interfaces
 {
-    public interface IBSRecipeBll : IBSCoreBll<BSRecipe>
-    {
-        
+    public interface IBSIngredientBll : IBSCoreBll<BSIngredient>
+    {   
     }
 }
