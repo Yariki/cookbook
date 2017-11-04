@@ -56,18 +56,32 @@
     <Reference Include="Moq, Version=4.7.142.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.142\lib\net45\Moq.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject, Version=3.3.3.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.3\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BSRecipeBll_Test.cs" />
+    <Compile Include="Base\BSBaseBllTest.cs" />
+    <Compile Include="Tests\BSRecipeBllTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cookbook.BussinessLayer\Cookbook.BussinessLayer.csproj">
+      <Project>{FD2643E9-3ED2-43A5-8FF0-B39236A239E5}</Project>
+      <Name>Cookbook.BussinessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cookbook.Data\Cookbook.Data.csproj">
+      <Project>{c4b9837f-2598-4cd1-ae1b-be3f8a5e05ed}</Project>
+      <Name>Cookbook.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

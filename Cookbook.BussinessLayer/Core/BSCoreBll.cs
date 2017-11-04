@@ -55,7 +55,8 @@ namespace Cookbook.BussinessLayer.Core
         {
             using (var unitOfWork = CreateUnitOfWork())
             {
-                return unitOfWork.Repository<TEntity>().GetAll(includes);
+                var rep = unitOfWork.Repository<TEntity>();
+                return rep.GetAll(includes);
             }
         }
 
