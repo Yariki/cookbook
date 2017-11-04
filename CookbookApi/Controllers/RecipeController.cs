@@ -95,11 +95,13 @@ namespace CookbookApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var recipe = recipeBll.GetById(recipeDto.Id);
-                if (recipe == null)
+                var recipe = recipeBll.GetFiltered(r => r.Id == recipeDto.Id, "Ingredients").FirstOrDefault();
+                if (recipe == null) 
                 {
                     return NotFound();
                 }
+
+                historyBll.AddHistory(recipe);
 
                 Mapper.Map(recipeDto, recipe);
 
@@ -135,6 +137,25 @@ namespace CookbookApi.Controllers
             return BadRequest();
         }
 
+        [HttpGet]
+        public IHttpActionResult GetHistory(int id)
+        {
+            try
+            {
+                var result = historyBll.GetHistoryForEntity<BSRecipe>(id);
+
+                if (result == null || !result.Any())
+                {
+                    return NotFound();
+                }
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+            }
+            return BadRequest();
+        }
 
 
 
