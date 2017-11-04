@@ -24,7 +24,7 @@ namespace Cookbook.Data.Core
         public DbSet<TEntity> Set => set;
 
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(params string[] includes)
+        public virtual IEnumerable<TEntity> GetAll(params string[] includes)
         {
             IQueryable<TEntity> qset = set;
             if (includes != null && includes.Length > 0)
@@ -34,10 +34,10 @@ namespace Cookbook.Data.Core
                     qset = qset.Include(s);
                 }
             }
-            return await qset.ToListAsync();
+            return qset.ToList();
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetFilteredAsync(Expression<Func<TEntity, bool>> filter, params string[] includes)
+        public virtual IEnumerable<TEntity> GetFiltered(Expression<Func<TEntity, bool>> filter, params string[] includes)
         {
             IQueryable<TEntity> query = set;
             if (filter != null)
@@ -52,7 +52,7 @@ namespace Cookbook.Data.Core
                 }
             }
 
-            return await query.ToListAsync();
+            return query.ToList();
 
         }
 

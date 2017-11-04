@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookbookApi", "CookbookApi\CookbookApi.csproj", "{683B26DB-507C-4B6F-BBD7-26AEE45D69D0}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cookbook.Data", "Cookbook.Data\Cookbook.Data.csproj", "{C4B9837F-2598-4CD1-AE1B-BE3F8A5E05ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cookbook.BussinessLayer", "Cookbook.BussinessLayer\Cookbook.BussinessLayer.csproj", "{FD2643E9-3ED2-43A5-8FF0-B39236A239E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cookbook.BussinessLayer.Test", "Cookbook.BussinessLayer.Test\Cookbook.BussinessLayer.Test.csproj", "{667B9C85-517C-4428-9B7C-1310F148D52C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +35,15 @@ Global
 		{FD2643E9-3ED2-43A5-8FF0-B39236A239E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD2643E9-3ED2-43A5-8FF0-B39236A239E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD2643E9-3ED2-43A5-8FF0-B39236A239E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{667B9C85-517C-4428-9B7C-1310F148D52C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{667B9C85-517C-4428-9B7C-1310F148D52C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{667B9C85-517C-4428-9B7C-1310F148D52C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{667B9C85-517C-4428-9B7C-1310F148D52C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FC947B14-FD34-4798-9FA5-EEFBBB2DFD64}
 	EndGlobalSection
 EndGlobal

@@ -12,7 +12,7 @@ namespace CookbookApi
     {
         protected void Application_Start()
         {
-            Mapper.Initialize(m => m.AddProfile<MappingProfile>());
+            Mapper.Initialize(m => m.AddProfile(typeof(MappingProfile)));
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

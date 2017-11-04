@@ -3,7 +3,7 @@ using System.Threading;
 using Cookbook.BussinessLayer.Interfaces;
 using CookbookApi;
 
-[assembly: WebActivatorEx.PostApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(NinjectWebCommon), "Stop")]
 namespace CookbookApi
 {

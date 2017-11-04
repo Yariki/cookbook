@@ -1,4 +1,5 @@
-﻿using CookbookApi.Helpers;
+﻿using AutoMapper;
+using CookbookApi.Helpers;
 using CookbookApi.Interfaces;
 using Ninject.Modules;
 
@@ -9,6 +10,7 @@ namespace CookbookApi
         public override void Load()
         {
             Bind<IBSLogger>().To<BSLogger>();
+            Bind<IMapper>().ToMethod(c => new Mapper(Mapper.Configuration));
         }
     }
 }

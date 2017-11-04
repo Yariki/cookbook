@@ -9,8 +9,8 @@ namespace Cookbook.Data.Interfaces
     public interface IBSCoreRepository<T> where T: class, IBSCoreEntity
     {
         DbSet<T> Set { get; }
-        Task<IEnumerable<T>> GetAllAsync(params string[] includes);
-        Task<IEnumerable<T>> GetFilteredAsync(Expression<Func<T, bool>> filter, params string[] includes);
+        IEnumerable<T> GetAll(params string[] includes);
+        IEnumerable<T> GetFiltered(Expression<Func<T, bool>> filter, params string[] includes);
         Task<T> GetByIdAsync(int id);
         void Insert(T entity);
         void Delete(T entity);

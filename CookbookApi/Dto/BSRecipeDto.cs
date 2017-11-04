@@ -6,6 +6,11 @@ namespace CookbookApi.Dto
 {
     public class BSRecipeDto
     {
+        public BSRecipeDto()
+        {
+            Ingredients = new List<BSIngredientDto>();
+        }
+
         public int Id { get; set; }
         
         public DateTime Created { get; set; }
@@ -16,6 +21,6 @@ namespace CookbookApi.Dto
         public string Description { get; set; }
 
 
-        public virtual ICollection<BSIngredientDto> Ingredients { get; set; }
+        public ICollection<BSIngredientDto> Ingredients { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Cookbook.Data.Models
         public double Amount { get; set; }
 
         public int? RecipeId { get; set; }
-
+        
         public BSRecipe Recipe { get; set; }
     }
 }

@@ -14,9 +14,9 @@ namespace Cookbook.BussinessLayer.Interfaces
         bool UserTransaction { get; set; }
         TEntity GetById(int Id);
         Task<TEntity> GetByIdAsync(int Id);
-        Task<IEnumerable<TEntity>> GetAllAsync(params string[] includes);
+        IEnumerable<TEntity> GetAll(params string[] includes);
 
-        Task<IEnumerable<TEntity>> GetFilteredAsync(Expression<Func<TEntity, bool>> filter,
+        IEnumerable<TEntity> GetFiltered(Expression<Func<TEntity, bool>> filter,
             params string[] includes);
 
         void Insert(TEntity entity);

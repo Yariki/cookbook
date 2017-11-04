@@ -6,10 +6,12 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Cookbook.BussinessLayer.Interfaces;
 using Cookbook.Data.Models;
 using CookbookApi.Dto;
 using CookbookApi.Interfaces;
+using Ninject;
 
 namespace CookbookApi.Controllers
 {
@@ -17,41 +19,47 @@ namespace CookbookApi.Controllers
     {
         private IBSRecipeBll recipeBll;
         private IBSEntityHistoryBll historyBll;
-        private IBSLogger logger;
         
-        public RecipeController(IBSRecipeBll recipeBll, IBSEntityHistoryBll historyBll, IBSLogger logger)
+        public RecipeController(IBSRecipeBll recipeBll, IBSEntityHistoryBll historyBll)
         {
             this.recipeBll = recipeBll;
             this.historyBll = historyBll;
-            this.logger = logger;
         }
 
+        [Inject]
+        public IBSLogger Logger { get; set; }
+
+        [Inject]
+        public IMapper Mapper { get; set; }
+
+
         [HttpGet]
-        public async Task<IHttpActionResult> GetAllRecipes()
+        public IHttpActionResult GetAllRecipes()
         {
             try
             {
-                var recipes = await recipeBll.GetAllAsync();
-                return Ok(recipes.Select(Mapper.Map<BSRecipe, BSRecipeDto>));
+                var recipes = recipeBll.GetAll();
+                var dtos = recipes.Select(Mapper.Map<BSRecipe, BSRecipeDto>);
+                return Ok(dtos);
             }
             catch (Exception e)
             {
-                logger?.Error(e.ToString());
+                Logger?.Error(e.ToString());
             }
             return BadRequest();
         }
 
         [HttpGet]
-        public async Task<IHttpActionResult> GetRecipeById(int id)
+        public IHttpActionResult GetRecipeById(int id)
         {
             try
             {
-                var recipe = await recipeBll.GetByIdAsync(id);
+                var recipe = recipeBll.GetById(id);
                 return Ok(Mapper.Map<BSRecipe, BSRecipeDto>(recipe));
             }
             catch (Exception e)
             {
-                logger?.Error(e.ToString());
+                Logger?.Error(e.ToString());
             }
             return BadRequest();
         }
@@ -73,7 +81,7 @@ namespace CookbookApi.Controllers
             }
             catch (Exception e)
             {
-                logger.Error(e.ToString());
+                Logger.Error(e.ToString());
             }
             return BadRequest();
         }
@@ -101,7 +109,7 @@ namespace CookbookApi.Controllers
             }
             catch (Exception e)
             {
-                logger.Error(e.ToString());
+                Logger.Error(e.ToString());
             }
             return BadRequest();
         }
@@ -122,7 +130,7 @@ namespace CookbookApi.Controllers
             }
             catch (Exception e)
             {
-                logger.Error(e.ToString());
+                Logger.Error(e.ToString());
             }
             return BadRequest();
         }

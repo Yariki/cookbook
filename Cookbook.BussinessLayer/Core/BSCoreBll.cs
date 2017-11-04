@@ -51,20 +51,20 @@ namespace Cookbook.BussinessLayer.Core
             }
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync(params string[] includes)
+        public IEnumerable<TEntity> GetAll(params string[] includes)
         {
             using (var unitOfWork = CreateUnitOfWork())
             {
-                return unitOfWork.Repository<TEntity>().GetAllAsync(includes);
+                return unitOfWork.Repository<TEntity>().GetAll(includes);
             }
         }
 
-        public Task<IEnumerable<TEntity>> GetFilteredAsync(Expression<Func<TEntity, bool>> filter,
+        public IEnumerable<TEntity> GetFiltered(Expression<Func<TEntity, bool>> filter,
             params string[] includes)
         {
             using (var unitOfWork = CreateUnitOfWork())
             {
-                return unitOfWork.Repository<TEntity>().GetFilteredAsync(filter, includes);
+                return unitOfWork.Repository<TEntity>().GetFiltered(filter, includes);
             }
         }
 
