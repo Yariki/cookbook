@@ -53,24 +53,44 @@ namespace Cookbook.BussinessLayer.Test.Base
             var dbSetMock = DBSetMock(data.ToList());
 
             var repositoryMock = new Mock<IBSCoreRepository<T>>();
-            repositoryMock.Setup(r => r.Insert(It.IsAny<T>())).Callback((T item) => dbSetMock.Object.Add(item));
+            repositoryMock.Setup(r => r.Insert(It.IsAny<T>())).Callback((T item) =>
+            {
+                dbSetMock.Object.Add(item);
+            });
+            repositoryMock.Setup(r => r.Delete(It.IsAny<T>())).Callback((T item) =>
+            {
+                dbSetMock.Object.Remove(item);
+            });
+            repositoryMock.Setup(r => r.Update(It.IsAny<T>())).Callback((T item) =>
+            {
+                dbSetMock.Object.Attach(item);
+            });
             repositoryMock.Setup(r => r.Delete(It.IsAny<T>())).Callback((T item) => dbSetMock.Object.Remove(item));
-            repositoryMock.Setup(r => r.Update(It.IsAny<T>())).Callback((T item) => dbSetMock.Object.Attach(item));
-            repositoryMock.Setup(r => r.Delete(It.IsAny<T>())).Callback((T item) => dbSetMock.Object.Remove(item));
-            repositoryMock.Setup(r => r.GetAll(It.IsAny<string[]>())).Returns(dbSetMock.Object.ToList());
+            repositoryMock.Setup(r => r.GetById(It.IsAny<int>())).Returns((int id) =>
+            {
+                return dbSetMock.Object.Find(id);
+            });
+            repositoryMock.Setup(r => r.GetAll(It.IsAny<string[]>())).Returns(() =>
+            {
+                return dbSetMock.Object;
+            });
 
             return repositoryMock;
         }
 
-        private Mock<DbSet<T>> DBSetMock<T>(List<T> data) where T : class, IBSCoreEntity
+        private Mock<DbSet<T>> DBSetMock<T>(List<T> dataList) where T : class, IBSCoreEntity
         {
+            var data = dataList;
             var dbSetMock = new Mock<DbSet<T>>();
             dbSetMock.As<IQueryable<T>>().Setup(m => m.Provider).Returns(data.AsQueryable().Provider);
             dbSetMock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(data.AsQueryable().Expression);
             dbSetMock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(data.AsQueryable().ElementType);
             dbSetMock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(data.AsQueryable().GetEnumerator());
             dbSetMock.Setup(d => d.Include(It.IsAny<string>())).Returns(dbSetMock.Object);
-            dbSetMock.Setup(set => set.Add(It.IsAny<T>())).Callback<T>(data.Add);
+            dbSetMock.Setup(set => set.Add(It.IsAny<T>())).Callback<T>((T item) =>
+            {
+                data?.Add(item);
+            });
             dbSetMock.Setup(set => set.Attach(It.IsAny<T>())).Callback(
                 (T item) =>
                 {
@@ -81,7 +101,11 @@ namespace Cookbook.BussinessLayer.Test.Base
             {
                 data.Remove(item);
             });
-            dbSetMock.Setup(m => m.Find(It.IsAny<object[]>())).Returns<object[]>(ids => data.FirstOrDefault(d => d.Id == (int)ids[0]));
+            dbSetMock.Setup(m => m.Find(It.IsAny<object[]>())).Returns<object[]>(ids =>
+            {
+                var entity = data.FirstOrDefault(d => d.Id == (int) ids[0]);
+                return entity;
+            });
 
             ContextMock.Setup(c => c.Set<T>()).Returns(dbSetMock.Object);
             return dbSetMock;
