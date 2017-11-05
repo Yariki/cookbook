@@ -34,12 +34,24 @@ namespace Cookbook.Client.Module.Core.MVVM
 
         public IBSView View { get; protected set; }
 
+        public string Title  => GetTitle();
         
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public virtual bool Closing()
+        {
+            return false;
+        }
+
+        public virtual void Initialize()
+        {
+            
+        }
+
 
         #endregion IARMViewModel Members
 
@@ -101,7 +113,7 @@ namespace Cookbook.Client.Module.Core.MVVM
         }
 
         
-        protected T Get<T>(string name)
+        protected T Get<T>([CallerMemberName]string name = null)
         {
             return Get<T>(name, default(T));
         }
@@ -120,14 +132,19 @@ namespace Cookbook.Client.Module.Core.MVVM
         protected void Set<T>(Expression<Func<T>> expression, T val)
         {
             var name = GetPropertyName(expression);
-            Set<T>(name, val);
+            Set<T>(val, name);
         }
 
         
-        protected virtual void Set<T>(string name, T val)
+        protected virtual void Set<T>(T val, [CallerMemberName]string name = null)
         {
             _values[name] = val;
             OnPropertyChanged(name);
+        }
+
+        protected virtual string GetTitle()
+        {
+            return "You miss to set title";
         }
 
     }

@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="Cookbook.Client.Module.View.BSMainWorkspaceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Cookbook.Client.Module.View"
+             xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:behaviors="clr-namespace:Cookbook.Client.Module.Core.Behaviors"
+             xmlns:templateSelectors="clr-namespace:Cookbook.Client.Module.Core.TemplateSelectors"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <DataTemplate x:Key="GridDataTemplate">
+            <ContentControl Content="{Binding View}"></ContentControl>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="RecipeDataTemplate">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                
+                
+                <ContentControl Grid.Row="0" Content="{Binding View}"></ContentControl>
+                
+                
+                <StackPanel Grid.Row="1"  
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    
+                    <Button Command="{Binding SaveCommand}" 
+                            Width="75" 
+                            Margin="5"
+                            ></Button>
+
+                    <Button Command="{Binding CancelCommand}" 
+                            Width="75" 
+                            Margin="5"
+                    ></Button>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+        
+        <templateSelectors:BSWorkspaceSelector 
+            x:Key="WorkspaceSelector"
+            GridTemplate="{StaticResource GridDataTemplate}" 
+            RecipeTemplate="{StaticResource RecipeDataTemplate}"
+        ></templateSelectors:BSWorkspaceSelector>
+
+    </UserControl.Resources>
+    
+    <Grid>
+        <xcad:DockingManager
+            DocumentsSource="{Binding Items,UpdateSourceTrigger=PropertyChanged}"
+            LayoutItemTemplateSelector="{StaticResource WorkspaceSelector}"
+            ActiveContent="{Binding CurrentItem,UpdateSourceTrigger=PropertyChanged}"
+            >
+            <xcad:DockingManager.DocumentHeaderTemplate>
+                <DataTemplate>
+                    <TextBlock x:Name="TextTitle" Text="{Binding Content.Title,UpdateSourceTrigger=PropertyChanged}" />
+                </DataTemplate>
+            </xcad:DockingManager.DocumentHeaderTemplate>
+            
+
+            <xcad:LayoutRoot x:Name="RootDockLayout">
+                <xcad:LayoutPanel Orientation="Horizontal">
+                    <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutDocumentPane />
+                    </xcad:LayoutDocumentPaneGroup>
+                </xcad:LayoutPanel>
+            </xcad:LayoutRoot>
+            <i:Interaction.Behaviors>
+                <behaviors:BSEventToCommandBehavior Event="DocumentClosing" Command="{Binding ClosingCommand}"
+                                                    PassArguments="True" PassSender="False" />
+            </i:Interaction.Behaviors>
+        </xcad:DockingManager>
+    </Grid>
+</UserControl>

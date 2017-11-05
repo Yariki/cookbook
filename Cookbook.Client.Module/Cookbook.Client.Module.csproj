@@ -128,27 +128,65 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BSClientModule.cs" />
+    <Compile Include="Core\Behaviors\BSEventToCommandBehavior.cs" />
     <Compile Include="Core\Data\BSCookbookApiClient.cs" />
     <Compile Include="Core\Data\Models\BSIngredient.cs" />
     <Compile Include="Core\Data\Models\BSModelBase.cs" />
     <Compile Include="Core\Data\Models\BSRecipe.cs" />
     <Compile Include="Core\Enums.cs" />
+    <Compile Include="Core\Events\BSAddRecipeEvent.cs" />
+    <Compile Include="Core\Events\BSEditRecipeEvent.cs" />
+    <Compile Include="Core\Events\BSRefreshGridEvent.cs" />
     <Compile Include="Core\Extensions\CommonExtensions.cs" />
     <Compile Include="Core\Extensions\ReflectionExtensions.cs" />
     <Compile Include="Core\MVVM\BSBaseViewModel.cs" />
     <Compile Include="Core\MVVM\BSDataViewModel.cs" />
     <Compile Include="Core\MVVM\BSRelayCommand.cs" />
+    <Compile Include="Core\TemplateSelectors\BSWorkspaceSelector.cs" />
     <Compile Include="Interfaces\Data\IBSCookbookApiClient.cs" />
     <Compile Include="Interfaces\MVVM\IBSBaseViewModel.cs" />
     <Compile Include="Interfaces\MVVM\IBSDataViewModel.cs" />
     <Compile Include="Interfaces\MVVM\IBSView.cs" />
+    <Compile Include="Interfaces\ViewModel\IBSMainWorkspaceViewModel.cs" />
+    <Compile Include="Interfaces\ViewModel\IBSRecipeGridViewModel.cs" />
+    <Compile Include="Interfaces\ViewModel\IBSRecipeViewModel.cs" />
+    <Compile Include="Interfaces\View\IBSMainWorkspaceView.cs" />
+    <Compile Include="Interfaces\View\IBSRecipeGridView.cs" />
+    <Compile Include="Interfaces\View\IBSRecipeView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\BSMainWorkspaceViewModel.cs" />
+    <Compile Include="ViewModel\BSRecipeGridViewModel.cs" />
+    <Compile Include="ViewModel\BSRecipeViewModel.cs" />
+    <Compile Include="View\BSMainWorkspaceView.xaml.cs">
+      <DependentUpon>BSMainWorkspaceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BSRecipeGridView.xaml.cs">
+      <DependentUpon>BSRecipeGridView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BSRecipeView.xaml.cs">
+      <DependentUpon>BSRecipeView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Page Include="View\BSMainWorkspaceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BSRecipeGridView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BSRecipeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

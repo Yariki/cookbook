@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Cookbook.Client.Module.Core.Extensions;
@@ -61,7 +62,7 @@ namespace Cookbook.Client.Module.Core.MVVM
         }
 
         
-        protected override void Set<T>(string name, T val)
+        protected override void Set<T>(T val, [CallerMemberName] string name = null)
         {
             if (_dataObject != null && HasProperty(name))
             {
@@ -74,7 +75,7 @@ namespace Cookbook.Client.Module.Core.MVVM
                 OnPropertyChanged(name);
             }
             else
-                base.Set(name, val);
+                base.Set(val, name);
         }
 
         
