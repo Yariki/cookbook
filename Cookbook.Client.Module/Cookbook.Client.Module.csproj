@@ -136,6 +136,7 @@
     <Compile Include="Core\Data\Models\BSRecipe.cs" />
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Core\Events\BSAddRecipeEvent.cs" />
+    <Compile Include="Core\Events\BSCancelRecipeEvent.cs" />
     <Compile Include="Core\Events\BSEditRecipeEvent.cs" />
     <Compile Include="Core\Events\BSRefreshGridEvent.cs" />
     <Compile Include="Core\Extensions\CommonExtensions.cs" />

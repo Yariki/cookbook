@@ -1,8 +1,9 @@
 ﻿using System.Windows;
 using Cookbook.Client.Module;
 using Cookbook.Client.Module.Interfaces.ViewModel;
-using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Unity;
 using Prism.Modularity;
+using Prism.Regions;
 using Prism.Unity;
 
 namespace Cookbook.Client
@@ -26,9 +27,10 @@ namespace Cookbook.Client
         {
             base.Run(runWithDefaultConfiguration);
             App.Current.MainWindow = (Window) this.Shell;
-            var mainViewModel = Container.TryResolve<IBSMainWorkspaceViewModel>();
+            var mainViewModel = Container.Resolve<IBSMainWorkspaceViewModel>();
+            mainViewModel.Initialize();
             (this.Shell as IMainWindow).Model = mainViewModel;
-            var regionManager = Container.TryResolve<IRegionManager>();
+            var regionManager = Container.Resolve<IRegionManager>();
             var region = regionManager.Regions["MainRegion"];
             region.Add(mainViewModel.View);
 

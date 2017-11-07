@@ -23,12 +23,11 @@ namespace Cookbook.Client.Module.Core.Data
             var response = client.Execute<List<BSRecipe>>(request);
             return response.Data;
         }
-
-
+        
         public async Task<IEnumerable<BSRecipe>> GetAllRecipesAsync()
         {
             var request = new RestRequest(Method.GET);
-            var response = await client.ExecuteGetTaskAsync<IEnumerable<BSRecipe>>(request);
+            var response = await client.ExecuteGetTaskAsync<List<BSRecipe>>(request);
             return response.Data;
         }
 
@@ -62,7 +61,7 @@ namespace Cookbook.Client.Module.Core.Data
             return response.StatusCode == HttpStatusCode.OK;
         }
 
-        public bool DaleteRecipe(int id)
+        public bool DeleteRecipe(int id)
         {
             var request = new RestRequest($"/{id}", Method.DELETE);
             var responce = client.Execute(request);

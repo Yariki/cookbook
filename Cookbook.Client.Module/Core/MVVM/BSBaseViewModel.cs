@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
+using Cookbook.Client.Module.Core.Extensions;
 using Cookbook.Client.Module.Interfaces.MVVM;
 using Microsoft.Practices.Unity;
 using Prism.Events;
@@ -52,13 +53,25 @@ namespace Cookbook.Client.Module.Core.MVVM
             
         }
 
+        public bool IsBusy
+        {
+            get { return Get<bool>(); }
+            set { Set(value);}
+        }
+
 
         #endregion IARMViewModel Members
 
         
         private void SetDataContext()
         {
-            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() => View.DataContext = this));
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+            {
+                if (View.IsNotNull())
+                {
+                    View.DataContext = this;
+                }
+            }));
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

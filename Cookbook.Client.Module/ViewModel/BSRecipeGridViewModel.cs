@@ -1,4 +1,11 @@
-﻿using Cookbook.Client.Module.Core.MVVM;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Input;
+using Cookbook.Client.Module.Core.Data.Models;
+using Cookbook.Client.Module.Core.Events;
+using Cookbook.Client.Module.Core.Extensions;
+using Cookbook.Client.Module.Core.MVVM;
+using Cookbook.Client.Module.Interfaces.Data;
 using Cookbook.Client.Module.Interfaces.MVVM;
 using Cookbook.Client.Module.Interfaces.View;
 using Cookbook.Client.Module.Interfaces.ViewModel;
@@ -9,14 +16,96 @@ namespace Cookbook.Client.Module.ViewModel
 {
     public class BSRecipeGridViewModel : BSBaseViewModel, IBSRecipeGridViewModel
     {
-        public BSRecipeGridViewModel(IUnityContainer unityContainer, IEventAggregator eventAggregator, IBSRecipeGridView view) 
-            : base(unityContainer, eventAggregator, view)
+        public BSRecipeGridViewModel(IUnityContainer unityContainer, IEventAggregator eventAggregator)
+            : base(unityContainer, eventAggregator, null)
         {
+
+        }
+
+        [Dependency]
+        public IBSCookbookApiClient ClientApi { get; set; }
+
+        public ObservableCollection<BSRecipe> Recipes { get; set; } = new ObservableCollection<BSRecipe>();
+
+        public BSRecipe SelectedItem
+        {
+            get { return Get<BSRecipe>(); }
+            set { Set(value); }
+        }
+
+        public ICommand AddRecipeCommand { get; set; }
+
+        public ICommand EditRecipeCommand { get; set; }
+
+        public ICommand DeleteRecipeCommand { get; set; }
+
+        public ICommand RefreshCommand { get; set; }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            InitCommands();
+            RefreshRecipies();
+        }
+
+        private async void RefreshRecipies()
+        {
+            var collection = await ClientApi?.GetAllRecipesAsync();
+            if (collection.IsNotNull() && collection.Any())
+            {
+                Recipes.Clear();
+                Recipes.AddRange(collection);
+            }
+        }
+
+        protected override string GetTitle()
+        {
+            return "Recipes";
         }
 
         public override bool Closing()
         {
             return true;
         }
+
+        private void InitCommands()
+        {
+            AddRecipeCommand = new BSRelayCommand(OnAddExecute);
+            EditRecipeCommand = new BSRelayCommand(OnEditExecute,OnCanExecute);
+            DeleteRecipeCommand = new BSRelayCommand(OnDeleteExecute,OnCanExecute);
+            RefreshCommand = new BSRelayCommand(OnRefreshExecute);
+        }
+
+
+        private void OnAddExecute(object arg)
+        {
+            EventAggregator.GetEvent<BSAddRecipeEvent>().Publish(null);
+        }
+
+        private void OnEditExecute(object arg)
+        {
+            EventAggregator.GetEvent<BSEditRecipeEvent>().Publish(SelectedItem);
+        }
+
+        private bool OnCanExecute(object arg)
+        {
+            return SelectedItem.IsNotNull();
+        }
+
+        private void OnDeleteExecute(object arg)
+        {
+            if (SelectedItem.IsNotNull())
+            {
+                ClientApi?.DeleteRecipe(SelectedItem.Id);
+                RefreshRecipies();
+            }
+        }
+
+        private void OnRefreshExecute(object arg)
+        {
+            RefreshRecipies();
+        }
+
+
     }
 }

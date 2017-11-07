@@ -12,6 +12,6 @@ namespace Cookbook.Client.Module.Interfaces.Data
         Task<BSRecipe> GetRecipeByIdAsync(int id);
         bool CreateRecipe(BSRecipe recipe);
         bool UpdateRecipe(BSRecipe recipe);
-        bool DaleteRecipe(int id);
+        bool DeleteRecipe(int id);
     }
 }

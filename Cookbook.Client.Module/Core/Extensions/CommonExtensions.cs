@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Practices.Unity;
 
 namespace Cookbook.Client.Module.Core.Extensions
 {
@@ -20,14 +21,25 @@ namespace Cookbook.Client.Module.Core.Extensions
             return arg == Visibility.Visible;
         }
 
-        public static bool IsBeetwen(this decimal value, decimal min, decimal max)
+        public static bool IsNull(this object arg)
         {
-            return value >= min && value < max;
+            return ReferenceEquals(arg, null);
         }
 
-        public static bool IsBeetwen(this int value, int min, int max)
+        public static bool IsNotNull(this object arg)
         {
-            return value >= min && value < max;
+            return !ReferenceEquals(arg, null);
         }
+
+        public static bool IsOneExist<T>(this IEnumerable<T> list)
+        {
+            return list.IsNotNull() && list.Count() == 1;
+        }
+
+        public static T Resolve<T>(this IUnityContainer container) where T: class
+        {
+            return container.Resolve(typeof(T)) as T;
+        }
+
     }
 }

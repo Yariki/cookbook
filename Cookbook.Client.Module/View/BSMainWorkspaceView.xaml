@@ -8,23 +8,27 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:behaviors="clr-namespace:Cookbook.Client.Module.Core.Behaviors"
              xmlns:templateSelectors="clr-namespace:Cookbook.Client.Module.Core.TemplateSelectors"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
+        
         <DataTemplate x:Key="GridDataTemplate">
-            <ContentControl Content="{Binding View}"></ContentControl>
+          <Grid DataContext="{Binding Content}">
+            <xctk:BusyIndicator IsBusy="{Binding IsBusy,UpdateSourceTrigger=PropertyChanged}">
+              <local:BSRecipeGridView ></local:BSRecipeGridView>
+            </xctk:BusyIndicator>
+          </Grid>
         </DataTemplate>
         
         <DataTemplate x:Key="RecipeDataTemplate">
-            <Grid >
+            <Grid DataContext="{Binding Content}" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                
-                
-                <ContentControl Grid.Row="0" Content="{Binding View}"></ContentControl>
-                
+
+                <local:BSRecipeView></local:BSRecipeView>                
                 
                 <StackPanel Grid.Row="1"  
                             Orientation="Horizontal"
@@ -33,12 +37,12 @@
                     <Button Command="{Binding SaveCommand}" 
                             Width="75" 
                             Margin="5"
-                            ></Button>
+                            >Save</Button>
 
                     <Button Command="{Binding CancelCommand}" 
                             Width="75" 
                             Margin="5"
-                    ></Button>
+                    >Cancel</Button>
                 </StackPanel>
             </Grid>
         </DataTemplate>

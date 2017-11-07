@@ -13,5 +13,10 @@ namespace Cookbook.Client
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var bootStrap = new ClientBootstrapper();
+            bootStrap.Run();
+        }
     }
 }

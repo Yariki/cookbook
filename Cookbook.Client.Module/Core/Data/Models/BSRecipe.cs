@@ -2,7 +2,7 @@
 
 namespace Cookbook.Client.Module.Core.Data.Models
 {
-    public class BSRecipe
+    public class BSRecipe : BSModelBase
     {
         public BSRecipe()
         {
@@ -15,6 +15,6 @@ namespace Cookbook.Client.Module.Core.Data.Models
         public string Description { get; set; }
 
 
-        public ICollection<BSIngredient> Ingredients { get; set; }
+        public List<BSIngredient> Ingredients { get; set; }
     }
 }

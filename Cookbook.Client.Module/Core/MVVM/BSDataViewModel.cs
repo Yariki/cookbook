@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Cookbook.Client.Module.Core.Events;
 using Cookbook.Client.Module.Core.Extensions;
 using Cookbook.Client.Module.Interfaces.MVVM;
 using Microsoft.Practices.Unity;
@@ -14,26 +15,27 @@ namespace Cookbook.Client.Module.Core.MVVM
 {
     public abstract  class BSDataViewModel : BSBaseViewModel, IBSDataViewModel
     {
-        private object _dataObject;
+        private object dataObject;
 
         protected BSDataViewModel(IUnityContainer unityContainer, IEventAggregator eventAggregator, IBSView view)
                 : base(unityContainer, eventAggregator, view)
         {
             SaveCommand = new BSRelayCommand(SaveExecute, CanSaveExecte);
+            CancelCommand = new BSRelayCommand(o => EventAggregator.GetEvent<BSCancelRecipeEvent>().Publish(this));
             HasChanges = false;
         }
         
         public virtual void SetBusinessObject(ViewMode mode, object data)
         {
             Mode = mode;
-            _dataObject = data;
+            dataObject = data;
         }
 
         
         public ViewMode Mode { get; private set; }
         public bool HasChanges { get; set; }
 
-        public  bool Closing()
+        public override bool Closing()
         {
             if (HasChanges)
             {
@@ -51,10 +53,10 @@ namespace Cookbook.Client.Module.Core.MVVM
         /// <returns></returns>
         protected override T Get<T>(string name, T defaultValue)
         {
-            if (_dataObject != null && HasProperty(name))
+            if (dataObject != null && HasProperty(name))
             {
-                var pi = _dataObject.GetType().GetPublicProperty(name);
-                var val = pi != null ? pi.GetPropertyValue<T>(_dataObject) : defaultValue;
+                var pi = dataObject.GetType().GetPublicProperty(name);
+                var val = pi != null ? pi.GetPropertyValue<T>(dataObject) : defaultValue;
                 return val;
             }
             else
@@ -64,12 +66,12 @@ namespace Cookbook.Client.Module.Core.MVVM
         
         protected override void Set<T>(T val, [CallerMemberName] string name = null)
         {
-            if (_dataObject != null && HasProperty(name))
+            if (dataObject != null && HasProperty(name))
             {
-                var pi = _dataObject.GetType().GetPublicProperty(name);
+                var pi = dataObject.GetType().GetPublicProperty(name);
                 if (pi != null)
                 {
-                    pi.SetPropertyValue(_dataObject, val);
+                    pi.SetPropertyValue(dataObject, val);
                     HasChanges = true;
                 }
                 OnPropertyChanged(name);
@@ -81,18 +83,18 @@ namespace Cookbook.Client.Module.Core.MVVM
         
         public TObj GetBusinessObject<TObj>()
         {
-            return (TObj)_dataObject;
+            return (TObj)dataObject;
         }
        
         protected bool HasProperty(string name)
         {
-            return _dataObject.GetType().HasProperty(name);
+            return dataObject.GetType().HasProperty(name);
         }
 
        
         protected PropertyInfo GetPropertyInfo(string name)
         {
-            return _dataObject.GetType().GetPublicProperty(name);
+            return dataObject.GetType().GetPublicProperty(name);
         }
 
         
@@ -111,12 +113,14 @@ namespace Cookbook.Client.Module.Core.MVVM
        
         public object DataObject
         {
-            get { return _dataObject; }
+            get { return dataObject; }
         }
 
         #region [commands]
 
         public ICommand SaveCommand { get; private set; }
+
+        public ICommand CancelCommand { get; private set; }
 
         #endregion
 
@@ -126,7 +130,7 @@ namespace Cookbook.Client.Module.Core.MVVM
         {
             if (!Disposed && disposing)
             {
-                _dataObject = null;
+                dataObject = null;
             }
             base.Dispose(disposing);
         }

@@ -14,7 +14,7 @@ namespace Cookbook.Client.Module.Core.TemplateSelectors
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            if (item is IBSDataViewModel)
+            if ((item is ContentPresenter) && (((ContentPresenter)item).Content is IBSDataViewModel))
             {
                 return RecipeTemplate;
             }
