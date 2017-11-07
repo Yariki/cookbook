@@ -176,6 +176,7 @@
     <Compile Include="App_Start\MappingProfile.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
     <Compile Include="Controllers\RecipeController.cs" />
     <Compile Include="CookbookApiModule.cs" />
     <Compile Include="Dto\BSIngredientDto.cs" />

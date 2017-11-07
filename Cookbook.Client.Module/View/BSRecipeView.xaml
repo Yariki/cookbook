@@ -4,41 +4,90 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Cookbook.Client.Module.View"
+             xmlns:xcdg="http://schemas.xceed.com/wpf/xaml/datagrid"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300">
-  <UserControl.Resources>
-    
-    <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-      <Setter Property="Margin" Value="5"></Setter>
-    </Style>
+    <UserControl.Resources>
 
-      <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-          <Setter Property="Margin" Value="5"></Setter>
-      </Style>
-    
-  </UserControl.Resources>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto"></RowDefinition>
-      <RowDefinition Height="Auto"></RowDefinition>
-      <RowDefinition Height="*"></RowDefinition>
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="Auto"></ColumnDefinition>
-      <ColumnDefinition Width="*"></ColumnDefinition>
-    </Grid.ColumnDefinitions>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
 
-    <TextBlock Grid.Row="0" Grid.Column="0">Name:</TextBlock>
+        <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
+        
+        
 
-    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <xcdg:DataGridCollectionViewSource x:Key="CollectionViewSource" FilterCriteriaMode="And" Source="{Binding Ingredients,UpdateSourceTrigger=PropertyChanged}"></xcdg:DataGridCollectionViewSource>
 
-    <TextBlock Grid.Row="1" Grid.Column="0">Description:</TextBlock>
-    
-    <TextBox Grid.Row="1" Grid.Column="1" 
+        <xcdg:CellEditor x:Key="StringEditor">
+            <xcdg:CellEditor.EditTemplate>
+                <DataTemplate>
+                    <TextBox Text="{xcdg:CellEditorBinding}" ></TextBox>
+                </DataTemplate>
+            </xcdg:CellEditor.EditTemplate>
+        </xcdg:CellEditor>
+
+        <xcdg:CellEditor x:Key="DoubleEditor">
+            <xcdg:CellEditor.EditTemplate>
+                <DataTemplate>
+                    <xctk:DoubleUpDown Value="{xcdg:CellEditorBinding}" ></xctk:DoubleUpDown>
+                </DataTemplate>
+            </xcdg:CellEditor.EditTemplate>
+        </xcdg:CellEditor>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0">Name:</TextBlock>
+
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+        <TextBlock Grid.Row="1" Grid.Column="0">Description:</TextBlock>
+
+        <TextBox Grid.Row="1" Grid.Column="1" 
              Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
              AcceptsReturn="True" TextWrapping="Wrap" SpellCheck.IsEnabled="True" Height="75" HorizontalScrollBarVisibility="Auto"
              VerticalScrollBarVisibility="Auto"></TextBox>
 
 
-  </Grid>
+        <TextBlock Grid.Row="2" Grid.Column="0">Ingredients:</TextBlock>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding AddIngredientCommand}" Margin="2">Add Ingredient</Button>
+                <Button Command="{Binding RemoveIngredientCommand}" Margin="2">Remove Ingredient</Button>
+            </StackPanel>
+            <xcdg:DataGridControl 
+                Height="300"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" 
+                SelectedItem="{Binding SelectedIngredient,UpdateSourceTrigger=PropertyChanged}"
+                AllowDrag="False"
+                AutoCreateColumns="False"
+            >
+                <xcdg:DataGridControl.Columns>
+                    <xcdg:Column FieldName="Name" Title="Name" CellEditor="{StaticResource StringEditor}"></xcdg:Column>
+                    <xcdg:Column FieldName="Amount" Title="Amount" CellEditor="{StaticResource DoubleEditor}"></xcdg:Column>
+                </xcdg:DataGridControl.Columns>
+            </xcdg:DataGridControl>
+
+        </StackPanel>
+
+    </Grid>
 </UserControl>

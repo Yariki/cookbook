@@ -8,6 +8,7 @@ using System.Web.Http;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Cookbook.BussinessLayer.Interfaces;
+using Cookbook.Data.Core;
 using Cookbook.Data.Models;
 using CookbookApi.Dto;
 using CookbookApi.Interfaces;
@@ -19,11 +20,13 @@ namespace CookbookApi.Controllers
     {
         private IBSRecipeBll recipeBll;
         private IBSEntityHistoryBll historyBll;
+        private IBSIngredientBll ingredientBll;
         
-        public RecipeController(IBSRecipeBll recipeBll, IBSEntityHistoryBll historyBll)
+        public RecipeController(IBSRecipeBll recipeBll,IBSIngredientBll ingredientBll, IBSEntityHistoryBll historyBll)
         {
             this.recipeBll = recipeBll;
             this.historyBll = historyBll;
+            this.ingredientBll = ingredientBll;
         }
 
         [Inject]
@@ -74,9 +77,8 @@ namespace CookbookApi.Controllers
                     return BadRequest(ModelState);
                 }
                 var recipe = Mapper.Map<BSRecipeDto, BSRecipe>(recipeDto);
-
                 recipeBll.Insert(recipe);
-
+                
                 return Created(new Uri($"{Request.RequestUri}/{recipe.Id}"), recipeDto);
             }
             catch (Exception e)
@@ -95,17 +97,17 @@ namespace CookbookApi.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var recipe = recipeBll.GetFiltered(r => r.Id == recipeDto.Id, "Ingredients").FirstOrDefault();
+                var recipe = recipeBll.GetById(recipeDto.Id);
                 if (recipe == null) 
                 {
                     return NotFound();
                 }
 
-                historyBll.AddHistory(recipe);
-
-                Mapper.Map(recipeDto, recipe);
-
-                recipeBll.Update(recipe);
+                //historyBll.AddHistory(recipe);
+                
+                var mappedRecipient = Mapper.Map<BSRecipe>(recipeDto);
+                
+                recipeBll.Update(mappedRecipient);
 
                 return Ok();
             }
@@ -137,25 +139,7 @@ namespace CookbookApi.Controllers
             return BadRequest();
         }
 
-        [HttpGet]
-        public IHttpActionResult GetHistory(int id)
-        {
-            try
-            {
-                var result = historyBll.GetHistoryForEntity<BSRecipe>(id);
-
-                if (result == null || !result.Any())
-                {
-                    return NotFound();
-                }
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.ToString());
-            }
-            return BadRequest();
-        }
+        
 
 
 

@@ -69,7 +69,7 @@ namespace Cookbook.BussinessLayer.Core
             }
         }
 
-        public void Insert(TEntity entity)
+        public virtual void Insert(TEntity entity)
         {
             if (InsertAction != null)
             {
@@ -80,7 +80,7 @@ namespace Cookbook.BussinessLayer.Core
         }
 
 
-        public void Update(TEntity entity)
+        public virtual void Update(TEntity entity)
         {
             if (UpdateAction != null)
             {
@@ -90,7 +90,7 @@ namespace Cookbook.BussinessLayer.Core
         }
 
 
-        public void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity)
         {
             if (DeleteAction != null)
             {

@@ -58,12 +58,12 @@ namespace Cookbook.Data.Core
 
         public TEntity GetById(int id)
         {
-            return Set.Find(id);
+            return Set.Include("Ingredients").SingleOrDefault(r => r.Id == id);
         }
 
         public virtual async Task<TEntity> GetByIdAsync(int id)
         {
-            return await set.FindAsync(id);
+            return await set.Include("Ingredients").SingleOrDefaultAsync(r => r.Id == id);
         }
 
         public virtual void Insert(TEntity entity)

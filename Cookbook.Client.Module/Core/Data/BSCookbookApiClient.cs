@@ -8,55 +8,24 @@ using RestSharp;
 
 namespace Cookbook.Client.Module.Core.Data
 {
-    public class BSCookbookApiClient : IBSCookbookApiClient
-    {
-        
-        private readonly  RestClient client = new RestClient("http://localhost:51697/api/recipe");
-        
+    public class BSCookbookApiClient : BSCookbookReadApiClient, IBSCookbookApiClient
+    {   
         public BSCookbookApiClient()
         {   
         }
-
-        public IEnumerable<BSRecipe> GetAllRecipes()
-        {
-            var request = new RestRequest(Method.GET);
-            var response = client.Execute<List<BSRecipe>>(request);
-            return response.Data;
-        }
         
-        public async Task<IEnumerable<BSRecipe>> GetAllRecipesAsync()
-        {
-            var request = new RestRequest(Method.GET);
-            var response = await client.ExecuteGetTaskAsync<List<BSRecipe>>(request);
-            return response.Data;
-        }
-
-        public BSRecipe GetRecipeById(int id)
-        {
-            var request = new RestRequest($"/{id}");
-            var response = client.Execute<BSRecipe>(request);
-            return response.Data;
-        }
-
-        public async Task<BSRecipe> GetRecipeByIdAsync(int id)
-        {
-            var request = new RestRequest($"/{id}");
-            var response = await client.ExecuteTaskAsync<BSRecipe>(request);
-            return response.Data;
-        }
-
         public bool CreateRecipe(BSRecipe recipe)
         {
             var request = new RestRequest(Method.POST);
-            request.AddObject(recipe);
+            request.AddJsonBody(recipe);
             var response = client.Execute(request);
-            return response.StatusCode == HttpStatusCode.OK;
+            return response.StatusCode == HttpStatusCode.Created;
         }
 
         public bool UpdateRecipe(BSRecipe recipe)
         {
             var request = new RestRequest(Method.PUT);
-            request.AddObject(recipe);
+            request.AddJsonBody(recipe);
             var response = client.Execute(request);
             return response.StatusCode == HttpStatusCode.OK;
         }

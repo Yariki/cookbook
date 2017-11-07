@@ -96,12 +96,10 @@ namespace Cookbook.Client.Module.Core.MVVM
         {
             return dataObject.GetType().GetPublicProperty(name);
         }
-
-        
         
         protected virtual bool CanSaveExecte(object arg)
         {
-            return true;
+            return HasChanges;
         }
 
        

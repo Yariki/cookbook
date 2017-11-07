@@ -131,6 +131,7 @@
     <Compile Include="BSClientModule.cs" />
     <Compile Include="Core\Behaviors\BSEventToCommandBehavior.cs" />
     <Compile Include="Core\Data\BSCookbookApiClient.cs" />
+    <Compile Include="Core\Data\BSCookbookReadApiClient.cs" />
     <Compile Include="Core\Data\Models\BSIngredient.cs" />
     <Compile Include="Core\Data\Models\BSModelBase.cs" />
     <Compile Include="Core\Data\Models\BSRecipe.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="Core\MVVM\BSRelayCommand.cs" />
     <Compile Include="Core\TemplateSelectors\BSWorkspaceSelector.cs" />
     <Compile Include="Interfaces\Data\IBSCookbookApiClient.cs" />
+    <Compile Include="Interfaces\Data\IBSCookbookReadApiClient.cs" />
     <Compile Include="Interfaces\MVVM\IBSBaseViewModel.cs" />
     <Compile Include="Interfaces\MVVM\IBSDataViewModel.cs" />
     <Compile Include="Interfaces\MVVM\IBSView.cs" />

@@ -28,6 +28,7 @@ namespace Cookbook.Client.Module
             unityContainer.RegisterType<IBSRecipeGridViewModel, BSRecipeGridViewModel>();
             unityContainer.RegisterType<IBSRecipeViewModel, BSRecipeViewModel>();
             unityContainer.RegisterType<IBSCookbookApiClient, BSCookbookApiClient>();
+            unityContainer.RegisterType<IBSCookbookReadApiClient, BSCookbookReadApiClient>();
         }
     }
 }

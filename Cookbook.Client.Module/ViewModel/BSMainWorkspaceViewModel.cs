@@ -6,6 +6,7 @@ using Cookbook.Client.Module.Core.Data.Models;
 using Cookbook.Client.Module.Core.Events;
 using Cookbook.Client.Module.Core.Extensions;
 using Cookbook.Client.Module.Core.MVVM;
+using Cookbook.Client.Module.Interfaces.Data;
 using Cookbook.Client.Module.Interfaces.MVVM;
 using Cookbook.Client.Module.Interfaces.View;
 using Cookbook.Client.Module.Interfaces.ViewModel;
@@ -27,7 +28,10 @@ namespace Cookbook.Client.Module.ViewModel
         {
 
         }
-        
+
+        [Dependency]
+        public IBSCookbookReadApiClient ReadApiClient { get; set; }
+
         public ICommand ClosingCommand { get; set; }
 
         public ObservableCollection<IBSBaseViewModel> Items { get; set; }
@@ -71,9 +75,11 @@ namespace Cookbook.Client.Module.ViewModel
             {
                 return;
             }
-            dataVM.Closing();
-            Items.Remove(dataVM);
-            dataVM.Dispose();
+            a.Cancel = dataVM.Closing();
+            if (!a.Cancel)
+            {
+                dataVM.Dispose();
+            }
         }
 
 
@@ -96,13 +102,16 @@ namespace Cookbook.Client.Module.ViewModel
             }
         }
 
-        private void OnEditRecipe(BSRecipe obj)
+        private async void OnEditRecipe(BSRecipe obj)
         {
             if (obj.IsNull())
             {
                 return;
             }
-            CreateRecipeViewModel(ViewMode.Edit,obj);
+
+            var recipe = await ReadApiClient?.GetRecipeByIdAsync(obj.Id);
+
+            CreateRecipeViewModel(ViewMode.Edit,recipe);
         }
 
         private void OnCancelRecipe(IBSDataViewModel obj)
@@ -117,7 +126,7 @@ namespace Cookbook.Client.Module.ViewModel
 
         private void OnAddRecipe(object obj)
         {
-            CreateRecipeViewModel(ViewMode.Add,new BSRecipe());
+            CreateRecipeViewModel(ViewMode.Add,new BSRecipe(){Created = DateTime.Now});
         }
 
         private void CreateRecipeViewModel(ViewMode mode, BSRecipe recipe)
@@ -129,5 +138,10 @@ namespace Cookbook.Client.Module.ViewModel
             CurrentItem = recipeVM;
         }
 
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            // TODO unsubscribe tokens
+        }
     }
 }

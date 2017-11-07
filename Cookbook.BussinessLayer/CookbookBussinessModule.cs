@@ -9,6 +9,7 @@ namespace Cookbook.BussinessLayer
         public override void Load()
         {
             Bind<IBSRecipeBll>().To<BSRecipeBll>();
+            Bind<IBSIngredientBll>().To<BSIngredientBll>();
             Bind<IBSEntityHistoryBll>().To<BSEntityHistoryBll>();
         }
     }
