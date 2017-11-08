@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using Cookbook.Client.Module.Core.Data.Models;
 using Cookbook.Client.Module.Core.Events;
@@ -47,17 +49,7 @@ namespace Cookbook.Client.Module.ViewModel
             InitCommands();
             RefreshRecipies();
         }
-
-        private async void RefreshRecipies()
-        {
-            var collection = await ClientApi?.GetAllRecipesAsync();
-            if (collection.IsNotNull() && collection.Any())
-            {
-                Recipes.Clear();
-                Recipes.AddRange(collection);
-            }
-        }
-
+        
         protected override string GetTitle()
         {
             return "Recipes";
@@ -93,11 +85,27 @@ namespace Cookbook.Client.Module.ViewModel
             return SelectedItem.IsNotNull();
         }
 
-        private void OnDeleteExecute(object arg)
+        private async void RefreshRecipies()
+        {
+            IsBusy = true;
+            var collection = await ClientApi?.GetAllRecipesAsync();
+            if (collection.IsNotNull() && collection.Any())
+            {
+                Recipes.Clear();
+                Recipes.AddRange(collection);
+            }
+            IsBusy = false;
+        }
+        
+        private async void OnDeleteExecute(object arg)
         {
             if (SelectedItem.IsNotNull())
             {
-                ClientApi?.DeleteRecipe(SelectedItem.Id);
+                var result = await ClientApi?.DeleteRecipe(SelectedItem.Id);
+                if (!result)
+                {
+                    MessageBox.Show("There is an error. Please, see the log files.");
+                }
                 RefreshRecipies();
             }
         }

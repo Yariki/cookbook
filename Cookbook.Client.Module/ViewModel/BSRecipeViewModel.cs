@@ -122,20 +122,21 @@ namespace Cookbook.Client.Module.ViewModel
             return Mode == ViewMode.Add ? $"New Recipe" : $"Edit Recipe {Recipe?.Id}";
         }
 
-        protected override void SaveExecute(object arg)
+        protected async override void SaveExecute(object arg)
         {
             try
             {
+                IsBusy = true;
                 var recipe = GetBusinessObject<BSRecipe>();
                 recipe.Ingredients = new List<BSIngredient>(Ingredients);
                 bool result = false;
                 switch (Mode)
                 {
                     case ViewMode.Add:
-                        result = Client.CreateRecipe(recipe);
+                        result = await Client.CreateRecipe(recipe);
                         break;
                     case ViewMode.Edit:
-                        result = Client.UpdateRecipe(recipe);
+                        result = await Client.UpdateRecipe(recipe);
                         break;
                 }
                 if (!result)
@@ -150,6 +151,10 @@ namespace Cookbook.Client.Module.ViewModel
             catch (Exception exception)
             {
                 Logger.Error(exception.ToString());
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 

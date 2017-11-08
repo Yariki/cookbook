@@ -56,8 +56,14 @@ namespace Cookbook.Client.Module.Core.MVVM
 
         public bool IsBusy
         {
-            get { return Get<bool>(); }
-            set { Set(value);}
+            get
+            {
+                return Get<bool>();
+            }
+            set
+            {
+                Set(value);
+            }
         }
 
 

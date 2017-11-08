@@ -17,6 +17,7 @@ namespace Cookbook.Data.Context
             :base("Name=CookbookConnection")
         {
             Configuration.ProxyCreationEnabled = false;
+            Database.SetInitializer(new CreateDatabaseIfNotExists<CookbookDbContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

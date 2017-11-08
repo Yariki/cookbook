@@ -15,13 +15,13 @@ namespace Cookbook.Client.Module.Core.Data
         {   
         }
         
-        public bool CreateRecipe(BSRecipe recipe)
+        public async Task<bool> CreateRecipe(BSRecipe recipe)
         {
             try
             {
                 var request = new RestRequest(Method.POST);
                 request.AddJsonBody(recipe);
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
                 if (response.StatusCode == HttpStatusCode.Created)
                 {
                     return true;
@@ -35,13 +35,13 @@ namespace Cookbook.Client.Module.Core.Data
             return false;
         }
 
-        public bool UpdateRecipe(BSRecipe recipe)
+        public async Task<bool> UpdateRecipe(BSRecipe recipe)
         {
             try
             {
                 var request = new RestRequest(Method.PUT);
                 request.AddJsonBody(recipe);
-                var response = client.Execute(request);
+                var response = await client.ExecuteTaskAsync(request);
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
                     return true;
@@ -55,12 +55,12 @@ namespace Cookbook.Client.Module.Core.Data
             return false;
         }
 
-        public bool DeleteRecipe(int id)
+        public async Task<bool> DeleteRecipe(int id)
         {
             try
             {
                 var request = new RestRequest($"/{id}", Method.DELETE);
-                var responce = client.Execute(request);
+                var responce = await client.ExecuteTaskAsync(request);
                 if (responce.StatusCode == HttpStatusCode.OK)
                 {
                     return true;

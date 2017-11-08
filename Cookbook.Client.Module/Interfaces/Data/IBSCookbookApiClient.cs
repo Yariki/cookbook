@@ -6,8 +6,8 @@ namespace Cookbook.Client.Module.Interfaces.Data
 {
     public interface IBSCookbookApiClient : IBSCookbookReadApiClient
     {
-        bool CreateRecipe(BSRecipe recipe);
-        bool UpdateRecipe(BSRecipe recipe);
-        bool DeleteRecipe(int id);
+        Task<bool> CreateRecipe(BSRecipe recipe);
+        Task<bool> UpdateRecipe(BSRecipe recipe);
+        Task<bool> DeleteRecipe(int id);
     }
 }
