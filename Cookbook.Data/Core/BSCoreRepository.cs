@@ -34,7 +34,7 @@ namespace Cookbook.Data.Core
                     qset = qset.Include(s);
                 }
             }
-            return qset.ToList();
+            return qset.OrderBy(r => r.Created).ToList();
         }
 
         public virtual IEnumerable<TEntity> GetFiltered(Expression<Func<TEntity, bool>> filter, params string[] includes)
@@ -52,7 +52,7 @@ namespace Cookbook.Data.Core
                 }
             }
 
-            return query.ToList();
+            return query.OrderBy(r => r.Created).ToList();
 
         }
 

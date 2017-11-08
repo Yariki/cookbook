@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Cookbook.Client.Module.Core;
 using Cookbook.Client.Module.Core.Data.Models;
+using Cookbook.Client.Module.Core.Events;
 using Cookbook.Client.Module.Core.Extensions;
 using Cookbook.Client.Module.Core.MVVM;
 using Cookbook.Client.Module.Interfaces.Data;
@@ -24,11 +27,21 @@ namespace Cookbook.Client.Module.ViewModel
 
         [Dependency]
         public IBSCookbookApiClient Client { get; set; }
+
+        [Dependency]
+        public IBSCookbookHistoryApiClient HistoryApiClient { get; set; }
+
         
         public override void SetBusinessObject(ViewMode mode, object data)
         {
             base.SetBusinessObject(mode, data);
             Ingredients = new ObservableCollection<BSIngredient>((data as BSRecipe).Ingredients);
+        }
+
+        public int Id
+        {
+            get { return Get<int>(); }
+            set { Set(value); }
         }
         
         public string Name
@@ -42,6 +55,13 @@ namespace Cookbook.Client.Module.ViewModel
             get { return Get<string>(); }
             set { Set(value); }
         }
+
+        public bool IsNew
+        {
+            get { return Get<bool>(); }
+            set { Set(value); }
+        }
+
         
         public ObservableCollection<BSIngredient> Ingredients
         {
@@ -59,15 +79,38 @@ namespace Cookbook.Client.Module.ViewModel
 
         public ICommand RemoveIngredientCommand { get; private set; }
 
+        public ICommand LoadHistoryCommand { get; private set; }
+
+        public ObservableCollection<BSRecipe> HistoryRecipies { get; set; }
+
+        public ObservableCollection<BSIngredient> HistoryIngredients { get; set; }
+
+        public BSRecipe SelectedHistoryRecipe
+        {
+            get { return Get<BSRecipe>(); }
+            set
+            {
+                Set(value); 
+                HistoryIngredients.Clear();
+                if (value.IsNotNull())
+                {
+                    HistoryIngredients.AddRange(value.Ingredients);
+                }
+            }
+        }
+        
 
         public override void Initialize()
         {
             base.Initialize();
             AddIngredientCommand = new BSRelayCommand(OnAddExecuted,o => true);
             RemoveIngredientCommand = new BSRelayCommand(OnRemoveExecuted, o => SelectedIngredient.IsNotNull());
+            LoadHistoryCommand = new BSRelayCommand(OnLoadHistoryExecuted, o => Recipe.IsNotNull());
+            HistoryRecipies = new ObservableCollection<BSRecipe>();
+            HistoryIngredients = new ObservableCollection<BSIngredient>();
+            IsNew = Recipe.Id > 0;
         }
-
-
+        
         private BSRecipe Recipe
         {
             get { return GetBusinessObject<BSRecipe>(); }
@@ -95,11 +138,18 @@ namespace Cookbook.Client.Module.ViewModel
                         result = Client.UpdateRecipe(recipe);
                         break;
                 }
+                if (!result)
+                {
+                    MessageBox.Show(
+                        "There is an error occur during creating/updating recipe.\nPlease, see the log file.");
+                }
                 HasChanges = !result;
+                EventAggregator.GetEvent<BSRefreshGridEvent>().Publish(null);
+                EventAggregator.GetEvent<BSCloseRecipeEvent>().Publish(this);
             }
             catch (Exception exception)
             {
-                // TODO add logging                
+                Logger.Error(exception.ToString());
             }
         }
 
@@ -115,7 +165,15 @@ namespace Cookbook.Client.Module.ViewModel
             HasChanges = true;
         }
 
-
-
+        private void OnLoadHistoryExecuted(object obj)
+        {
+            var list = HistoryApiClient.GetHistoryForRecipeById(Recipe.Id);
+            if (list.IsNotNull())
+            {
+                HistoryRecipies.Clear();
+                HistoryRecipies.AddRange(list);
+            }
+        }
+        
     }
 }

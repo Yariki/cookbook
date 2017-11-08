@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Cookbook.Client.Module.Core;
 using Cookbook.Client.Module.Core.Data.Models;
@@ -20,7 +21,7 @@ namespace Cookbook.Client.Module.ViewModel
     public class BSMainWorkspaceViewModel : BSBaseViewModel, IBSMainWorkspaceViewModel
     {
         private SubscriptionToken addRecipeToken;
-        private SubscriptionToken cancelRecipeToken;
+        private SubscriptionToken closeRecipeToken;
         private SubscriptionToken editRecipeToken;
 
         public BSMainWorkspaceViewModel(IUnityContainer unityContainer, IEventAggregator eventAggregator, IBSMainWorkspaceView view) 
@@ -32,7 +33,9 @@ namespace Cookbook.Client.Module.ViewModel
         [Dependency]
         public IBSCookbookReadApiClient ReadApiClient { get; set; }
 
-        public ICommand ClosingCommand { get; set; }
+        public ICommand ClosingCommand { get; private set; }
+
+        public ICommand ShowGridCommand { get; private set; }
 
         public ObservableCollection<IBSBaseViewModel> Items { get; set; }
 
@@ -57,28 +60,42 @@ namespace Cookbook.Client.Module.ViewModel
             base.Initialize();
             InitEventAggregator();
             ClosingCommand = new BSRelayCommand(OnClosingExecute,o => true);
+            ShowGridCommand = new BSRelayCommand(OnShowGridExecuted, o => !Items.Any(r => r is IBSRecipeGridViewModel));
             Items = new ObservableCollection<IBSBaseViewModel>();
-            var recipeGrid = UnityContainerExtensions.Resolve<IBSRecipeGridViewModel>(UnityContainer);
+            ShowGridCommand.Execute(null);
+            Logger.Info("Application has been started...");
+        }
+
+        private void OnShowGridExecuted(object obj)
+        {
+            var recipeGrid = UnityContainer.Resolve<IBSRecipeGridViewModel>();
             recipeGrid.Initialize();
             Items.Add(recipeGrid);
         }
 
         private void OnClosingExecute(object arg)
         {
-            var a = arg as DocumentClosingEventArgs;
-            if (a.IsNull())
+            try
             {
-                return;
+                var a = arg as DocumentClosingEventArgs;
+                if (a.IsNull())
+                {
+                    return;
+                }
+                var dataVM = a.Document.Content as BSBaseViewModel;
+                if (dataVM.IsNull())
+                {
+                    return;
+                }
+                a.Cancel = dataVM.Closing();
+                if (!a.Cancel)
+                {
+                    dataVM.Dispose();
+                }
             }
-            var dataVM = a.Document.Content as BSDataViewModel;
-            if (dataVM.IsNull())
+            catch (Exception e)
             {
-                return;
-            }
-            a.Cancel = dataVM.Closing();
-            if (!a.Cancel)
-            {
-                dataVM.Dispose();
+                Logger.Error(e.ToString());
             }
         }
 
@@ -90,10 +107,10 @@ namespace Cookbook.Client.Module.ViewModel
             {
                 addRecipeToken = addEvent.Subscribe(OnAddRecipe);
             }
-            var cancelRecipe = EventAggregator?.GetEvent<BSCancelRecipeEvent>();
-            if (cancelRecipe.IsNotNull())
+            var closeRecipeEvent = EventAggregator?.GetEvent<BSCloseRecipeEvent>();
+            if (closeRecipeEvent.IsNotNull())
             {
-                cancelRecipeToken = cancelRecipe.Subscribe(OnCancelRecipe);
+                closeRecipeToken = closeRecipeEvent.Subscribe(OnCloseRecipe);
             }
             var editRecipe = EventAggregator?.GetEvent<BSEditRecipeEvent>();
             if (editRecipe.IsNotNull())
@@ -109,12 +126,18 @@ namespace Cookbook.Client.Module.ViewModel
                 return;
             }
 
+            var existVM = Items.OfType<IBSRecipeViewModel>().SingleOrDefault(v => v.Id == obj.Id);
+            if (existVM.IsNotNull())
+            {
+                CurrentItem = existVM;
+                return;
+            }
+            
             var recipe = await ReadApiClient?.GetRecipeByIdAsync(obj.Id);
-
             CreateRecipeViewModel(ViewMode.Edit,recipe);
         }
 
-        private void OnCancelRecipe(IBSDataViewModel obj)
+        private void OnCloseRecipe(IBSDataViewModel obj)
         {
             if (obj.IsNull())
             {
@@ -131,17 +154,11 @@ namespace Cookbook.Client.Module.ViewModel
 
         private void CreateRecipeViewModel(ViewMode mode, BSRecipe recipe)
         {
-            var recipeVM = UnityContainerExtensions.Resolve<IBSRecipeViewModel>(UnityContainer);
+            var recipeVM = UnityContainer.Resolve<IBSRecipeViewModel>();
             recipeVM.SetBusinessObject(mode,recipe);
             recipeVM.Initialize();
             Items.Add(recipeVM);
             CurrentItem = recipeVM;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            // TODO unsubscribe tokens
         }
     }
 }

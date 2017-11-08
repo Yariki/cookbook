@@ -1,5 +1,7 @@
 ﻿using Cookbook.Client.Module.Core.Data;
+using Cookbook.Client.Module.Core.Logger;
 using Cookbook.Client.Module.Interfaces.Data;
+using Cookbook.Client.Module.Interfaces.Logger;
 using Cookbook.Client.Module.Interfaces.View;
 using Cookbook.Client.Module.Interfaces.ViewModel;
 using Cookbook.Client.Module.View;
@@ -29,6 +31,8 @@ namespace Cookbook.Client.Module
             unityContainer.RegisterType<IBSRecipeViewModel, BSRecipeViewModel>();
             unityContainer.RegisterType<IBSCookbookApiClient, BSCookbookApiClient>();
             unityContainer.RegisterType<IBSCookbookReadApiClient, BSCookbookReadApiClient>();
+            unityContainer.RegisterType<IBSCookbookHistoryApiClient, BSCookbookHistoryApiClient>();
+            unityContainer.RegisterType<IBSClientLogger, BSClientLogger>();
         }
     }
 }

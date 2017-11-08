@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using Cookbook.BussinessLayer.Core;
 using Cookbook.BussinessLayer.Interfaces;
@@ -31,7 +34,7 @@ namespace Cookbook.BussinessLayer.Blls
             var list = new List<T>();
             foreach (var bsEntityHistory in histories)
             {
-                list.Add(DesirializeObject<T>(bsEntityHistory.Values));
+                list.Add(ConvertXMLToClass<T>(bsEntityHistory.Values));
             }
             return list;
         }
@@ -41,23 +44,44 @@ namespace Cookbook.BussinessLayer.Blls
             var history = new BSEntityHistory();
             history.ObjectId = obj.Id;
             history.Type = typeof(T).Name;
-            history.Values = SerializeObject(obj, typeof(T));
+            history.Values = ConvertClassToXMLString(obj);
             this.Insert(history);
         }
 
-        private string SerializeObject(object obj, Type t)
+        //private string SerializeObject(object obj, Type t)
+        //{
+        //    var serializer = new XmlSerializer(t);
+        //    var text = new StringWriter();
+        //    serializer.Serialize(text,obj);
+        //    return text.ToString();
+        //}
+
+        private string ConvertClassToXMLString<T>(T classObject) where T: class 
         {
-            var serializer = new XmlSerializer(t);
-            var text = new StringWriter();
-            serializer.Serialize(text,obj);
-            return text.ToString();
+            using (var stream = new MemoryStream())
+            {
+                var serializer = new DataContractSerializer(classObject.GetType());
+                serializer.WriteObject(stream, classObject);
+                return Encoding.UTF8.GetString(stream.ToArray());
+            }
         }
 
-        private T DesirializeObject<T>(string obj) where T : class, IBSCoreEntity
+        private T ConvertXMLToClass<T>(string xml) where T:class 
         {
-            var serializer = new XmlSerializer(typeof(T));
-            return serializer.Deserialize(new StringReader(obj)) as T;
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(xml)))
+            {
+                var reader = XmlDictionaryReader.CreateTextReader(stream,Encoding.UTF8, new XmlDictionaryReaderQuotas(), null);
+                var serializer = new DataContractSerializer(typeof(T));
+                return serializer.ReadObject(reader) as T;
+            }
         }
+
+
+        //private T DesirializeObject<T>(string obj) where T : class, IBSCoreEntity
+        //{
+        //    var serializer = new XmlSerializer(typeof(T));
+        //    return serializer.Deserialize(new StringReader(obj)) as T;
+        //}
         
     }
 }

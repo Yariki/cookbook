@@ -70,6 +70,9 @@
       <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
@@ -131,23 +134,27 @@
     <Compile Include="BSClientModule.cs" />
     <Compile Include="Core\Behaviors\BSEventToCommandBehavior.cs" />
     <Compile Include="Core\Data\BSCookbookApiClient.cs" />
+    <Compile Include="Core\Data\BSCookbookHistoryApiClient.cs" />
     <Compile Include="Core\Data\BSCookbookReadApiClient.cs" />
     <Compile Include="Core\Data\Models\BSIngredient.cs" />
     <Compile Include="Core\Data\Models\BSModelBase.cs" />
     <Compile Include="Core\Data\Models\BSRecipe.cs" />
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Core\Events\BSAddRecipeEvent.cs" />
-    <Compile Include="Core\Events\BSCancelRecipeEvent.cs" />
+    <Compile Include="Core\Events\BSCloseRecipeEvent.cs" />
     <Compile Include="Core\Events\BSEditRecipeEvent.cs" />
     <Compile Include="Core\Events\BSRefreshGridEvent.cs" />
     <Compile Include="Core\Extensions\CommonExtensions.cs" />
     <Compile Include="Core\Extensions\ReflectionExtensions.cs" />
+    <Compile Include="Core\Logger\BSClientLogger.cs" />
     <Compile Include="Core\MVVM\BSBaseViewModel.cs" />
     <Compile Include="Core\MVVM\BSDataViewModel.cs" />
     <Compile Include="Core\MVVM\BSRelayCommand.cs" />
     <Compile Include="Core\TemplateSelectors\BSWorkspaceSelector.cs" />
     <Compile Include="Interfaces\Data\IBSCookbookApiClient.cs" />
+    <Compile Include="Interfaces\Data\IBSCookbookHistoryApiClient.cs" />
     <Compile Include="Interfaces\Data\IBSCookbookReadApiClient.cs" />
+    <Compile Include="Interfaces\Logger\IBSClientLogger.cs" />
     <Compile Include="Interfaces\MVVM\IBSBaseViewModel.cs" />
     <Compile Include="Interfaces\MVVM\IBSDataViewModel.cs" />
     <Compile Include="Interfaces\MVVM\IBSView.cs" />
@@ -173,6 +180,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />

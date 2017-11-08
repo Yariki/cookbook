@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using System.Xml.Serialization;
 using Cookbook.Data.Core;
 
 namespace Cookbook.Data.Models
@@ -11,6 +13,8 @@ namespace Cookbook.Data.Models
 
         public int? RecipeId { get; set; }
         
+        [XmlIgnore]
+        [IgnoreDataMember]
         public BSRecipe Recipe { get; set; }
     }
 }

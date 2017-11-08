@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Cookbook.Client"
         xmlns:regions="http://prismlibrary.com/"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="MainWindow" Height="600" Width="800">
     <Grid>
         <ContentControl 

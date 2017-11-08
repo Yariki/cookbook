@@ -4,8 +4,10 @@ using System.Web.Http;
 using AutoMapper;
 using Cookbook.BussinessLayer.Interfaces;
 using Cookbook.Data.Models;
+using CookbookApi.Dto;
 using CookbookApi.Interfaces;
 using Ninject;
+using Ninject.Infrastructure.Language;
 
 namespace CookbookApi.Controllers
 {
@@ -35,7 +37,8 @@ namespace CookbookApi.Controllers
                 {
                     return NotFound();
                 }
-                return Ok(result);
+                var dtos = result.Select(r => Mapper.Map<BSRecipe, BSRecipeDto>(r)).OrderBy(r => r.Created);
+                return Ok(dtos);
             }
             catch (Exception e)
             {

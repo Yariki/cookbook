@@ -74,6 +74,7 @@ namespace Cookbook.Client.Module.ViewModel
             EditRecipeCommand = new BSRelayCommand(OnEditExecute,OnCanExecute);
             DeleteRecipeCommand = new BSRelayCommand(OnDeleteExecute,OnCanExecute);
             RefreshCommand = new BSRelayCommand(OnRefreshExecute);
+            EventAggregator.GetEvent<BSRefreshGridEvent>().Subscribe(o => RefreshRecipies());
         }
 
 

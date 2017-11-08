@@ -56,7 +56,21 @@
     </UserControl.Resources>
     
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Menu Grid.Row="0">
+            <MenuItem Header="File" >
+                <MenuItem.Items>
+                    <MenuItem Header="Open of recipies list" Command="{Binding ShowGridCommand}"></MenuItem>
+                </MenuItem.Items>
+            </MenuItem>
+        </Menu>
+        
         <xcad:DockingManager
+            Grid.Row="1"
             DocumentsSource="{Binding Items,UpdateSourceTrigger=PropertyChanged}"
             LayoutItemTemplateSelector="{StaticResource WorkspaceSelector}"
             ActiveContent="{Binding CurrentItem,UpdateSourceTrigger=PropertyChanged}"

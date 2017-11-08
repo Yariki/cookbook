@@ -18,10 +18,14 @@
         <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
             <Setter Property="Margin" Value="5"></Setter>
         </Style>
-        
-        
+
+
 
         <xcdg:DataGridCollectionViewSource x:Key="CollectionViewSource" FilterCriteriaMode="And" Source="{Binding Ingredients,UpdateSourceTrigger=PropertyChanged}"></xcdg:DataGridCollectionViewSource>
+
+        <xcdg:DataGridCollectionViewSource x:Key="HistoryRecipeViewSource" FilterCriteriaMode="And" Source="{Binding HistoryRecipies,UpdateSourceTrigger=PropertyChanged}"></xcdg:DataGridCollectionViewSource>
+
+        <xcdg:DataGridCollectionViewSource x:Key="HistoryIngresientsViewSource" FilterCriteriaMode="And" Source="{Binding HistoryIngredients,UpdateSourceTrigger=PropertyChanged}"></xcdg:DataGridCollectionViewSource>
 
         <xcdg:CellEditor x:Key="StringEditor">
             <xcdg:CellEditor.EditTemplate>
@@ -41,53 +45,116 @@
 
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0">Name:</TextBlock>
+        <TabControl>
+            <TabItem Header="Recipe">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
 
-        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <TextBlock Grid.Row="0" Grid.Column="0">Name:</TextBlock>
 
-        <TextBlock Grid.Row="1" Grid.Column="0">Description:</TextBlock>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
-        <TextBox Grid.Row="1" Grid.Column="1" 
+                    <TextBlock Grid.Row="1" Grid.Column="0">Description:</TextBlock>
+
+                    <TextBox Grid.Row="1" Grid.Column="1" 
              Text="{Binding Description,UpdateSourceTrigger=PropertyChanged}"
              AcceptsReturn="True" TextWrapping="Wrap" SpellCheck.IsEnabled="True" Height="75" HorizontalScrollBarVisibility="Auto"
              VerticalScrollBarVisibility="Auto"></TextBox>
 
 
-        <TextBlock Grid.Row="2" Grid.Column="0">Ingredients:</TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="0">Ingredients:</TextBlock>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding AddIngredientCommand}" Margin="2">Add Ingredient</Button>
-                <Button Command="{Binding RemoveIngredientCommand}" Margin="2">Remove Ingredient</Button>
-            </StackPanel>
-            <xcdg:DataGridControl 
-                Height="300"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                HorizontalContentAlignment="Stretch"
-                ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" 
-                SelectedItem="{Binding SelectedIngredient,UpdateSourceTrigger=PropertyChanged}"
-                AllowDrag="False"
-                AutoCreateColumns="False"
-            >
-                <xcdg:DataGridControl.Columns>
-                    <xcdg:Column FieldName="Name" Title="Name" CellEditor="{StaticResource StringEditor}"></xcdg:Column>
-                    <xcdg:Column FieldName="Amount" Title="Amount" CellEditor="{StaticResource DoubleEditor}"></xcdg:Column>
-                </xcdg:DataGridControl.Columns>
-            </xcdg:DataGridControl>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Command="{Binding AddIngredientCommand}" Margin="2">Add Ingredient</Button>
+                            <Button Command="{Binding RemoveIngredientCommand}" Margin="2">Remove Ingredient</Button>
+                        </StackPanel>
+                        <xcdg:DataGridControl 
+                            Height="300"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            ItemsSource="{Binding Source={StaticResource CollectionViewSource}}" 
+                            SelectedItem="{Binding SelectedIngredient,UpdateSourceTrigger=PropertyChanged}"
+                            AllowDrag="False"
+                            AutoCreateColumns="False"
+                            >
+                            <xcdg:DataGridControl.Columns>
+                                <xcdg:Column FieldName="Name" Title="Name" CellEditor="{StaticResource StringEditor}"></xcdg:Column>
+                                <xcdg:Column FieldName="Amount" Title="Amount" CellEditor="{StaticResource DoubleEditor}"></xcdg:Column>
+                            </xcdg:DataGridControl.Columns>
+                        </xcdg:DataGridControl>
 
-        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Recipe History" IsEnabled="{Binding IsNew,UpdateSourceTrigger=PropertyChanged}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Command="{Binding LoadHistoryCommand}" Width="75" Margin="2">Load History</Button>
+                    
+                    <StackPanel Grid.Row="1"
+                                Orientation="Vertical">
+                        
+                        <TextBlock Margin="2">Recipes:</TextBlock>
+                        
+                        <xcdg:DataGridControl 
+                        
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            ItemsSource="{Binding Source={StaticResource HistoryRecipeViewSource}}" 
+                            SelectedItem="{Binding SelectedHistoryRecipe,UpdateSourceTrigger=PropertyChanged}"
+                            AllowDrag="False"
+                            AutoCreateColumns="true"
+                            Margin="2"
+                        >
+                        </xcdg:DataGridControl>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Row="2"
+                                Orientation="Vertical">
+
+                        <TextBlock Margin="2">Ingredients of seleted recipe:</TextBlock>
+
+                        <xcdg:DataGridControl 
+                        
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            ItemsSource="{Binding Source={StaticResource HistoryIngresientsViewSource}}" 
+                            AllowDrag="False"
+                            AutoCreateColumns="true"
+                            Margin="2"
+                        >
+                        </xcdg:DataGridControl>
+
+
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
 
     </Grid>
 </UserControl>

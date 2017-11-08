@@ -21,7 +21,7 @@ namespace Cookbook.Client.Module.Core.MVVM
                 : base(unityContainer, eventAggregator, view)
         {
             SaveCommand = new BSRelayCommand(SaveExecute, CanSaveExecte);
-            CancelCommand = new BSRelayCommand(o => EventAggregator.GetEvent<BSCancelRecipeEvent>().Publish(this));
+            CancelCommand = new BSRelayCommand(o => EventAggregator.GetEvent<BSCloseRecipeEvent>().Publish(this));
             HasChanges = false;
         }
         

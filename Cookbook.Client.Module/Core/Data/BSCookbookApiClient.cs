@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Policy;
 using System.Threading.Tasks;
@@ -16,25 +17,61 @@ namespace Cookbook.Client.Module.Core.Data
         
         public bool CreateRecipe(BSRecipe recipe)
         {
-            var request = new RestRequest(Method.POST);
-            request.AddJsonBody(recipe);
-            var response = client.Execute(request);
-            return response.StatusCode == HttpStatusCode.Created;
+            try
+            {
+                var request = new RestRequest(Method.POST);
+                request.AddJsonBody(recipe);
+                var response = client.Execute(request);
+                if (response.StatusCode == HttpStatusCode.Created)
+                {
+                    return true;
+                }
+                Logger.Warning(response.Content);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+            }
+            return false;
         }
 
         public bool UpdateRecipe(BSRecipe recipe)
         {
-            var request = new RestRequest(Method.PUT);
-            request.AddJsonBody(recipe);
-            var response = client.Execute(request);
-            return response.StatusCode == HttpStatusCode.OK;
+            try
+            {
+                var request = new RestRequest(Method.PUT);
+                request.AddJsonBody(recipe);
+                var response = client.Execute(request);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return true;
+                }
+                Logger.Warning(response.Content);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+            }
+            return false;
         }
 
         public bool DeleteRecipe(int id)
         {
-            var request = new RestRequest($"/{id}", Method.DELETE);
-            var responce = client.Execute(request);
-            return responce.StatusCode == HttpStatusCode.OK;
+            try
+            {
+                var request = new RestRequest($"/{id}", Method.DELETE);
+                var responce = client.Execute(request);
+                if (responce.StatusCode == HttpStatusCode.OK)
+                {
+                    return true;
+                }
+                Logger.Warning(responce.Content);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.ToString());
+            }
+            return false;
         }
 
 

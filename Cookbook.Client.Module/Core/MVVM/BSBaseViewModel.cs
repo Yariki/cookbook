@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 using Cookbook.Client.Module.Core.Extensions;
+using Cookbook.Client.Module.Interfaces.Logger;
 using Cookbook.Client.Module.Interfaces.MVVM;
 using Microsoft.Practices.Unity;
 using Prism.Events;
@@ -62,6 +63,9 @@ namespace Cookbook.Client.Module.Core.MVVM
 
         #endregion IARMViewModel Members
 
+        [Microsoft.Practices.Unity.Dependency]
+        protected IBSClientLogger Logger { get; set; }
+
         
         private void SetDataContext()
         {
@@ -73,7 +77,7 @@ namespace Cookbook.Client.Module.Core.MVVM
                 }
             }));
         }
-
+        
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChangedEventHandler temp = PropertyChanged;

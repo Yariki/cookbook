@@ -20,13 +20,12 @@ namespace CookbookApi.Controllers
     {
         private IBSRecipeBll recipeBll;
         private IBSEntityHistoryBll historyBll;
-        private IBSIngredientBll ingredientBll;
         
-        public RecipeController(IBSRecipeBll recipeBll,IBSIngredientBll ingredientBll, IBSEntityHistoryBll historyBll)
+        
+        public RecipeController(IBSRecipeBll recipeBll,IBSEntityHistoryBll historyBll)
         {
             this.recipeBll = recipeBll;
             this.historyBll = historyBll;
-            this.ingredientBll = ingredientBll;
         }
 
         [Inject]
@@ -103,7 +102,7 @@ namespace CookbookApi.Controllers
                     return NotFound();
                 }
 
-                //historyBll.AddHistory(recipe);
+                historyBll.AddHistory(recipe);
                 
                 var mappedRecipient = Mapper.Map<BSRecipe>(recipeDto);
                 
